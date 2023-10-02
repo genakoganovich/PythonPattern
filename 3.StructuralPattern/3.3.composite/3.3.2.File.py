@@ -10,7 +10,7 @@ class Component(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def display(self):
+    def display(self, prev=''):
         pass
 
 
@@ -19,8 +19,8 @@ class File(Component):
         self.name = name
         self.is_directory = False
 
-    def display(self):
-        print(f'|- {self.name}')
+    def display(self, prev=''):
+        print(f'{prev}|- {self.name}')
 
 
 class Directory(Component):
@@ -32,11 +32,10 @@ class Directory(Component):
     def add_child(self, child):
         self.children.add(child)
 
-    def display(self):
-        print(self.name)
+    def display(self, prev=''):
+        print(f'{prev}{self.name}')
         for child in sorted(self.children, key=lambda x: (x.is_directory, x.name)):
-            print(f'|  ', end='')
-            child.display()
+            child.display(f'{prev}|  ')
 
 
 class Client:
@@ -45,6 +44,7 @@ class Client:
 
     def display(self):
         self.component.display()
+
 
 """
 Пример теста
