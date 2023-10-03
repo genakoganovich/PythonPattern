@@ -16,10 +16,14 @@ class Retry(Foo):
         for _ in range(n):
             output_stream = sys.stdout
             sys.stdout = io.StringIO()
-            self.foo.one_try()
-            output = sys.stdout.getvalue()
-            sys.stdout = output_stream
-            print(output)
+            try:
+                self.foo.one_try()
+            except FooError:
+                pass
+            finally:
+                output = sys.stdout.getvalue()
+                sys.stdout = output_stream
+                print(output)
 
             if output.rstrip() == 'Success try':
                 break
